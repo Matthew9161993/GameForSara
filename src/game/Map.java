@@ -45,6 +45,7 @@ public class Map {
 			
 			addFrontier(workingCell);
 		}
+		createObstacles();
 	}
 	
 	private void addFrontier(Cell cell) {
@@ -112,6 +113,16 @@ public class Map {
 			mapData[oldCell.getX()][oldCell.getY() - 1].createPath();
 		} else {
 			mapData[oldCell.getX() + 1][oldCell.getY()].createPath();
+		}
+	}
+	
+	private void createObstacles() {
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				if (mapData[i][j].isPath()) {
+					mapData[i][j].createObstacle(rand);
+				}
+			}
 		}
 	}
 	

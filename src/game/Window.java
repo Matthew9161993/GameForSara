@@ -10,6 +10,12 @@ public class Window {
 	public Icon tileIcon;
 	
 	public Icon wallIcon;
+	
+	public Icon puppyIcon;
+	
+	public Icon babyIcon;
+	
+	public Icon snakeIcon;
 
 	public JButton tileButton;
 	
@@ -17,10 +23,19 @@ public class Window {
 	
 	private final int BUTTONSIZE = 35;
 	
+	private final int SARA = 8;
+	private final int HALLWAY = 9;
+	private final int PUPPY = 10;
+	private final int BABY = 11;
+	private final int SNAKE = 12;
+	
 	public Window() {
 		frame = new JFrame("Wall and Tile");
 		tileIcon = new ImageIcon("tile.png");
 		wallIcon = new ImageIcon("wall.png");
+		puppyIcon = new ImageIcon("puppy.png");
+		babyIcon = new ImageIcon("babby.png");
+		snakeIcon = new ImageIcon("snake.png");
 		tileButton = new JButton(tileIcon);
 		wallButton = new JButton(wallIcon);
 	}
@@ -64,7 +79,17 @@ public class Window {
 		for (int i = 0; i < map.getMapSize(); i++) {
 			for (int j = 0; j < map.getMapSize(); j++) {
 				if (buttonMapCells[i][j].isPath()) {
-					drawTile(i, j, tileIcon);
+					switch(buttonMapCells[i][j].getOccupant()) {
+					
+						case HALLWAY : drawTile(i, j, tileIcon);
+						break;
+						case PUPPY : drawTile(i, j, puppyIcon);
+						break;
+						case BABY : drawTile(i, j, babyIcon);
+						break;
+						case SNAKE : drawTile(i, j, snakeIcon);
+						break;
+					}
 				} else {
 					drawTile(i, j, wallIcon);
 				}

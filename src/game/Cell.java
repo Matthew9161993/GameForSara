@@ -1,5 +1,7 @@
 package game;
 
+import java.util.Random;
+
 public class Cell {
 
 	private int xPos;
@@ -19,6 +21,12 @@ public class Cell {
 	private final int SOUTHWEST = 5;
 	private final int WEST = 6;
 	private final int NORTHWEST = 7;
+	
+	private final int SARA = 8;
+	private final int HALLWAY = 9;
+	private final int PUPPY = 10;
+	private final int BABY = 11;
+	private final int SNAKE = 12;
 	
 	public Cell(int i, int j, int mazeSize) {
 		xPos = i;
@@ -82,6 +90,29 @@ public class Cell {
 	
 	public int getOccupant() {
 		return occupant;
+	}
+	
+	public void setOccupant(int i) {
+		occupant = i;
+	}
+	
+	// Current forecast:
+	// 70% hallways
+	// 15% puppies
+	// 10% babies
+	// 5% snakes
+	public void createObstacle (Random r) {
+		int diceRoll = r.nextInt(100);
+		if (diceRoll < 70) {
+			setOccupant(HALLWAY);
+			isOccupied = false;
+		} else if (diceRoll >= 70 && diceRoll < 85) {
+			setOccupant(PUPPY);
+		} else if (diceRoll >= 85 && diceRoll < 95) {
+			setOccupant(BABY);
+		} else {
+			setOccupant(SNAKE);
+		}
 	}
 	
 	public void printCell() {
