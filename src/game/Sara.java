@@ -7,6 +7,7 @@ public class Sara {
 	private static int yPos;
 	
 	public Sara () {
+		System.out.println("Hi Matt!");
 		happiness = 0;
 		xPos = 0;
 		yPos = 0;
@@ -24,36 +25,47 @@ public class Sara {
 		return happiness;
 	}
 	
-	// These goDirection functions are great and all, but the caller of these functions 
-	// currently is able to pass in a cell in a reachable location in the wrong direction!
-	// I would never make such a mistake *knock on wood*
-	public void goNorth(Cell cell) {
+	public void addToCell(Cell cell) {
+		cell.setOccupant(cell.SARA);
+	}
+	
+	public void prepareSara(Cell cell) {
+		
 		if (reachable(cell)) {
-			if (look(cell)) {
-				yPos--;
-			} else {
-				System.out.println("Sara just ran into a wall! Ouch!");
+			//North, East, South, West
+			if (yPos > cell.getY()) {
+				goNorth(cell);
+			} else if (xPos < cell.getX()) {
+				goEast(cell);
+			} else if (yPos < cell.getY()) {
+				goSouth(cell);
+			} else if (xPos > cell.getX()) {
+				goWest(cell);
 			}
+		}
+	}
+	
+	public void goNorth(Cell cell) {
+		if (look(cell)) {
+			yPos--;
+		} else {
+			System.out.println("Sara just ran into a wall! Ouch!");
 		}
 	}
 	
 	public void goEast(Cell cell) {
-		if (reachable(cell)) {
-			if (look(cell)) {
-				xPos++;
-			} else {
-				System.out.println("Sara just ran into a wall! Ouch!");
-			}
+		if (look(cell)) {
+			xPos++;
+		} else {
+			System.out.println("Sara just ran into a wall! Ouch!");
 		}
 	}
 	
 	public void goSouth(Cell cell) {
-		if (reachable(cell)) {
-			if (look(cell)) {
-				yPos++;
-			} else {
-				System.out.println("Sara just ran into a wall! Ouch!");
-			}
+		if (look(cell)) {
+			yPos++;
+		} else {
+			System.out.println("Sara just ran into a wall! Ouch!");
 		}
 	}
 	

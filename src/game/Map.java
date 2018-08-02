@@ -9,11 +9,13 @@ public class Map {
 	private List<Cell> frontierCells;
 	private List<Cell> availableCells;
 	private Random rand;
+	private Sara sara;
 	
-	public Map(int startingDirection, int size) {
+	public Map(int startingDirection, int size, Sara Sara) {
 		rand = new Random();
 		mapData = new Cell[size][size];
 		mapSize = size;
+		sara = Sara;
 		initMap();
 	}
 	
@@ -119,8 +121,14 @@ public class Map {
 	private void createObstacles() {
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
-				if (mapData[i][j].isPath()) {
-					mapData[i][j].createObstacle(rand);
+				if (i == 0 && j ==0) {
+					// TODO: Change this later. Add Sara to the map! Currently adding to top left, this will change
+					sara.addToCell(mapData[0][0]);
+				}
+				if (!mapData[i][j].isOccupied()) {
+					if (mapData[i][j].isPath()) {
+						mapData[i][j].createObstacle(rand);
+					}
 				}
 			}
 		}

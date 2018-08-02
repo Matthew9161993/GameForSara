@@ -22,11 +22,11 @@ public class Cell {
 	private final int WEST = 6;
 	private final int NORTHWEST = 7;
 	
-	private final int SARA = 8;
-	private final int HALLWAY = 9;
-	private final int PUPPY = 10;
-	private final int BABY = 11;
-	private final int SNAKE = 12;
+	public final int SARA = 8;
+	public final int HALLWAY = 9;
+	public final int PUPPY = 10;
+	public final int BABY = 11;
+	public final int SNAKE = 12;
 	
 	public Cell(int i, int j, int mazeSize) {
 		xPos = i;
@@ -82,6 +82,7 @@ public class Cell {
 			System.out.println("You shouldn't be here.");
 		}
 		isPath = true;
+		isOccupied = false;
 	}
 	
 	public boolean isOccupied() {
@@ -94,6 +95,11 @@ public class Cell {
 	
 	public void setOccupant(int i) {
 		occupant = i;
+		if (occupant == HALLWAY) {
+			isOccupied = false;
+		} else {
+			isOccupied = true;
+		}
 	}
 	
 	// Current forecast:
