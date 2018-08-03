@@ -34,6 +34,10 @@ public class Cell {
 	public final int BABY = 11;
 	public final int SNAKE = 12;
 	
+	public final int PUPPY_SCORE = 5;
+	public final int BABY_SCORE = 10;
+	public final int SNAKE_SCORE = -25;
+	
 	private final int BUTTONSIZE = 35;
 	
 	public Cell(int i, int j, int mazeSize) {
@@ -138,6 +142,22 @@ public class Cell {
 			setOccupant(BABY);
 		} else {
 			setOccupant(SNAKE);
+		}
+	}
+	
+	// Scoring time
+	// puppies : 5 pts
+	// babies : 10 pts
+	// snakes : -25 pts
+	
+	public void calculateHappiness(Sara sara) {
+		switch (getOccupant()) {
+			case (PUPPY) : sara.addToHappiness(PUPPY_SCORE);
+			break;
+			case (BABY) : sara.addToHappiness(BABY_SCORE);
+			break;
+			case (SNAKE) :sara.addToHappiness(SNAKE_SCORE);
+			break;
 		}
 	}
 	

@@ -17,6 +17,11 @@ public class Sara {
 		return happiness;
 	}
 	
+	public void addToHappiness(int i) {
+		happiness += i;
+		System.out.println("Happiness : " + happiness);
+	}
+	
 	public Cell getLocation() {
 		return saraCell;
 	}
@@ -51,6 +56,7 @@ public class Sara {
 		
 		if (look(cell)) {
 			previousCell = saraCell;
+			cell.calculateHappiness(this);
 			cell.setOccupant(HALLWAY);
 			saraCell = cell;
 			addToCell(saraCell);
@@ -67,6 +73,7 @@ public class Sara {
 		
 		if (look(cell)) {
 			previousCell = saraCell;
+			cell.calculateHappiness(this);
 			cell.setOccupant(HALLWAY);
 			saraCell = cell;
 			addToCell(saraCell);
@@ -83,6 +90,7 @@ public class Sara {
 		
 		if (look(cell)) {
 			previousCell = saraCell;
+			cell.calculateHappiness(this);
 			cell.setOccupant(HALLWAY);
 			saraCell = cell;
 			addToCell(saraCell);
@@ -99,6 +107,7 @@ public class Sara {
 		
 		if (look(cell)) {
 			previousCell = saraCell;
+			cell.calculateHappiness(this);
 			cell.setOccupant(HALLWAY);
 			saraCell = cell;
 			addToCell(saraCell);
