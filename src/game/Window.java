@@ -12,6 +12,8 @@ public class Window {
 	
 	public Sara sara;
 	
+	public Map map;
+	
 	public Icon tileIcon;
 	
 	public Icon wallIcon;
@@ -26,23 +28,22 @@ public class Window {
 	
 	private buttonPresser pressMe;
 	
-	private final int BUTTONSIZE = 35;
-	
 	private final int SARA = 8;
 	private final int HALLWAY = 9;
 	private final int PUPPY = 10;
 	private final int BABY = 11;
 	private final int SNAKE = 12;
 	
-	public Window(Sara Sara) {
-		frame = new JFrame("Wall and Tile");
+	public Window(Map map) {
+		frame = new JFrame("Sara Takes a Walk!");
 		tileIcon = new ImageIcon("tile.png");
 		wallIcon = new ImageIcon("wall.png");
 		puppyIcon = new ImageIcon("puppy.png");
 		babyIcon = new ImageIcon("babby.png");
 		snakeIcon = new ImageIcon("snake.png");
 		SaraIcon = new ImageIcon("Sara.png");
-		sara = Sara;
+		sara = map.getSara();
+		this.map = map;
 	}
 	
 	public JFrame getFrame() {
@@ -53,45 +54,42 @@ public class Window {
 		return tileIcon;
 	}
 	
-	public void setupScene(Map map) {
+	public void setupScene() {
 		frame.setLayout(null);
 		frame.setSize(1000, 1000);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		drawButtonMap(map);
+		drawButtonMap();
 		frame.setVisible(true);
 	}
 	
-	public void drawTile(int x, int y, Icon icon, Map map) {
-		JButton tileFactory = new JButton(icon);
-		Border emptyBorder = BorderFactory.createEmptyBorder();
-		tileFactory.setBorder(emptyBorder);
-		tileFactory.setBounds(20 + BUTTONSIZE * x, 20 + BUTTONSIZE * y,
-				BUTTONSIZE, BUTTONSIZE);
-		Cell currentCell = map.getMapData()[x][y];
-		tileFactory.addActionListener(new buttonPresser(currentCell, sara));
-		getFrame().add(tileFactory);
+	public void drawTile(Cell cell, Icon icon) {
+		// Create the button first
+		cell.makeButton(icon);
+		// Add the listener next
+		cell.getButton().addActionListener(new buttonPresser(cell, this));
+		getFrame().add(cell.getButton());
 	}
 	
-	public void drawButtonMap(Map map) {
+	public void drawButtonMap() {
 		Cell[][] buttonMapCells = map.getMapData();
 		for (int i = 0; i < map.getMapSize(); i++) {
 			for (int j = 0; j < map.getMapSize(); j++) {
 				if (buttonMapCells[i][j].isPath()) {
 					switch(buttonMapCells[i][j].getOccupant()) {
 					
-						case HALLWAY : drawTile(i, j, tileIcon, map);
+						case HALLWAY : drawTile(buttonMapCells[i][j], tileIcon);
 						break;
-						case PUPPY : drawTile(i, j, puppyIcon, map);
+						case PUPPY : drawTile(buttonMapCells[i][j], puppyIcon);
 						break;
-						case BABY : drawTile(i, j, babyIcon, map);
+						case BABY : drawTile(buttonMapCells[i][j], babyIcon);
 						break;
-						case SNAKE : drawTile(i, j, snakeIcon, map);
+						case SNAKE : drawTile(buttonMapCells[i][j], snakeIcon);
 						break;
-						case SARA : drawTile(i, j, SaraIcon, map);
+						case SARA : drawTile(buttonMapCells[i][j], SaraIcon);
 					}
 				} else {
-					drawTile(i, j, wallIcon, map);
+					drawTile(buttonMapCells[i][j], wallIcon);
 				}
 			}
 		}
@@ -102,15 +100,25 @@ class buttonPresser implements ActionListener {
 
     private Cell cell;
     private Sara sara;
+    private Window window;
 
-    public buttonPresser(Cell cell, Sara sara){
+    public buttonPresser(Cell cell, Window window){
         super();
         this.cell = cell;
-        this.sara = sara;
+        this.sara = window.sara;
+        this.window = window;
     }
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		sara.prepareSara(cell);
+		Cell previousCell = sara.prepareSara(cell);
+		if (previousCell != null) {
+			redrawButton(previousCell);
+		}
+	}
+	
+	public void redrawButton(Cell cell) {
+		cell.getButton().setIcon(window.tileIcon);
+		sara.getLocation().getButton().setIcon(window.SaraIcon);
 	}
 	
 }

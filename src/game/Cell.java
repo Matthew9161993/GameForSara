@@ -2,6 +2,11 @@ package game;
 
 import java.util.Random;
 
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.border.Border;
+
 public class Cell {
 
 	private int xPos;
@@ -10,6 +15,7 @@ public class Cell {
 	private boolean isPath;
 	private boolean isOccupied;
 	private int occupant;
+	private JButton button;
 	
 	//Direction values
 	private final int NOT_AN_EDGE = -1;
@@ -27,6 +33,8 @@ public class Cell {
 	public final int PUPPY = 10;
 	public final int BABY = 11;
 	public final int SNAKE = 12;
+	
+	private final int BUTTONSIZE = 35;
 	
 	public Cell(int i, int j, int mazeSize) {
 		xPos = i;
@@ -77,6 +85,10 @@ public class Cell {
 		return isPath;
 	}
 	
+	public JButton getButton() {
+		return button;
+	}
+	
 	public void createPath() {
 		if (isPath) {
 			System.out.println("You shouldn't be here.");
@@ -100,6 +112,14 @@ public class Cell {
 		} else {
 			isOccupied = true;
 		}
+	}
+	
+	public void makeButton(Icon icon) {
+		button = new JButton(icon);
+		Border emptyBorder = BorderFactory.createEmptyBorder();
+		button.setBorder(emptyBorder);
+		button.setBounds(20 + BUTTONSIZE * getX(), 20 + BUTTONSIZE * getY(),
+				BUTTONSIZE, BUTTONSIZE);
 	}
 	
 	// Current forecast:

@@ -11,18 +11,20 @@ public class Map {
 	private Random rand;
 	private Sara sara;
 	
-	public Map(int startingDirection, int size, Sara Sara) {
+	public Map(int startingDirection, int size) {
 		rand = new Random();
 		mapData = new Cell[size][size];
 		mapSize = size;
-		sara = Sara;
 		initMap();
 	}
 	
 	private void initMap() {
 		for (int i = 0; i < mapSize; i++) {
-			for (int j = 0; j< mapSize; j++) {
+			for (int j = 0; j < mapSize; j++) {
 				mapData[i][j] = new Cell(i, j, mapSize);
+				if (i == 0 && j == 0) {
+					sara = new Sara(mapData[i][j]);
+				}
 			}
 		}
 		initRandomMap();
@@ -140,6 +142,10 @@ public class Map {
 	
 	public Cell[][] getMapData() {
 		return mapData;
+	}
+	
+	public Sara getSara() {
+		return sara;
 	}
 	
 	public void printMap() {

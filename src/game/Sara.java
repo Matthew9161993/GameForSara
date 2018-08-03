@@ -3,78 +3,110 @@ package game;
 public class Sara {
 	
 	private static int happiness;
-	private static int xPos;
-	private static int yPos;
+	private static Cell saraCell;
 	
-	public Sara () {
+	private final int HALLWAY = 9;
+	
+	public Sara (Cell cell) {
 		System.out.println("Hi Matt!");
 		happiness = 0;
-		xPos = 0;
-		yPos = 0;
-	}
-	
-	public int getX() {
-		return xPos;
-	}
-	
-	public int getY() {
-		return yPos;
+		saraCell = cell;
 	}
 	
 	public int getHappiness() {
 		return happiness;
 	}
 	
+	public Cell getLocation() {
+		return saraCell;
+	}
+	
 	public void addToCell(Cell cell) {
 		cell.setOccupant(cell.SARA);
 	}
 	
-	public void prepareSara(Cell cell) {
+	public Cell prepareSara(Cell cell) {
+		
+		Cell previousCell = null;
 		
 		if (reachable(cell)) {
 			//North, East, South, West
-			if (yPos > cell.getY()) {
-				goNorth(cell);
-			} else if (xPos < cell.getX()) {
-				goEast(cell);
-			} else if (yPos < cell.getY()) {
-				goSouth(cell);
-			} else if (xPos > cell.getX()) {
-				goWest(cell);
+			if (saraCell.getY() > cell.getY()) {
+				previousCell = goNorth(cell);
+			} else if (saraCell.getX() < cell.getX()) {
+				previousCell = goEast(cell);
+			} else if (saraCell.getY() < cell.getY()) {
+				previousCell = goSouth(cell);
+			} else if (saraCell.getX() > cell.getX()) {
+				previousCell = goWest(cell);
 			}
 		}
+		
+		return previousCell;
 	}
 	
-	public void goNorth(Cell cell) {
+	public Cell goNorth(Cell cell) {
+		
+		Cell previousCell = null;
+		
 		if (look(cell)) {
-			yPos--;
+			previousCell = saraCell;
+			cell.setOccupant(HALLWAY);
+			saraCell = cell;
+			addToCell(saraCell);
 		} else {
 			System.out.println("Sara just ran into a wall! Ouch!");
 		}
+		
+		return previousCell;
 	}
 	
-	public void goEast(Cell cell) {
+	public Cell goEast(Cell cell) {
+		
+		Cell previousCell = null;
+		
 		if (look(cell)) {
-			xPos++;
+			previousCell = saraCell;
+			cell.setOccupant(HALLWAY);
+			saraCell = cell;
+			addToCell(saraCell);
 		} else {
 			System.out.println("Sara just ran into a wall! Ouch!");
 		}
+		
+		return previousCell;
 	}
 	
-	public void goSouth(Cell cell) {
+	public Cell goSouth(Cell cell) {
+		
+		Cell previousCell = null;
+		
 		if (look(cell)) {
-			yPos++;
+			previousCell = saraCell;
+			cell.setOccupant(HALLWAY);
+			saraCell = cell;
+			addToCell(saraCell);
 		} else {
 			System.out.println("Sara just ran into a wall! Ouch!");
 		}
+		
+		return previousCell;
 	}
 	
-	public void goWest(Cell cell) {
+	public Cell goWest(Cell cell) {
+		
+		Cell previousCell = null;
+		
 		if (look(cell)) {
-			xPos--;
+			previousCell = saraCell;
+			cell.setOccupant(HALLWAY);
+			saraCell = cell;
+			addToCell(saraCell);
 		} else {
 			System.out.println("Sara just ran into a wall! Ouch!");
 		}
+		
+		return previousCell;
 	}
 	
 	// Checks if Sara will walk into a wall!
@@ -89,9 +121,10 @@ public class Sara {
 	//Will need to check if hallway is adjacent as well....
 	public boolean reachable(Cell cell) {
 		boolean isReachable = false;
-		if (cell.getX() == getX() && cell.getY() == getY()) {
+		if (cell.getX() == saraCell.getX() && cell.getY() == saraCell.getY()) {
 			System.out.println("Sara doesn't like wasting time!");
-		} else if (Math.abs(cell.getX() - getX()) <= 1 && Math.abs(cell.getY() - getY()) <= 1) {
+		} else if (Math.abs(cell.getX() - saraCell.getX()) <= 1 && Math.abs(cell.getY() - saraCell.getY()) <= 0 || 
+				Math.abs(cell.getX() - saraCell.getX()) <= 0 && Math.abs(cell.getY() - saraCell.getY()) <= 1 ) {
 			isReachable = true;
 		} else {
 			System.out.println("Sara can't just teleport! (not yet...)");
