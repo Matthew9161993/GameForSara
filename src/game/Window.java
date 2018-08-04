@@ -2,6 +2,8 @@ package game;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,9 +12,13 @@ public class Window {
 	
 	public JFrame frame;
 	
+	public JLabel scoreBox;
+	
 	public Sara sara;
 	
 	public Map map;
+	
+//	public buttonPresser controller;
 	
 	public Icon tileIcon;
 	
@@ -25,8 +31,6 @@ public class Window {
 	public Icon snakeIcon;
 	
 	public Icon SaraIcon;
-	
-	private buttonPresser pressMe;
 	
 	private final int SARA = 8;
 	private final int HALLWAY = 9;
@@ -43,6 +47,8 @@ public class Window {
 		snakeIcon = new ImageIcon("snake.png");
 		SaraIcon = new ImageIcon("Sara.png");
 		sara = map.getSara();
+		scoreBox = new JLabel("Happiness: " + sara.getHappiness());
+//		controller = new buttonPresser(null, this);
 		this.map = map;
 	}
 	
@@ -56,11 +62,15 @@ public class Window {
 	
 	public void setupScene() {
 		frame.setLayout(null);
-		frame.setSize(1000, 1000);
+		frame.setSize(1200, 1000);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		drawButtonMap();
+		scoreBox.setBounds(1000, 200 , 100, 50);
+		frame.add(scoreBox);
+		frame.addKeyListener(new buttonPresser(null, this));
 		frame.setVisible(true);
+		frame.setFocusable(true);
 	}
 	
 	public void drawTile(Cell cell, Icon icon) {
@@ -96,7 +106,7 @@ public class Window {
 	}
 }
 
-class buttonPresser implements ActionListener {
+class buttonPresser implements ActionListener, KeyListener {
 
     private Cell cell;
     private Sara sara;
@@ -112,13 +122,149 @@ class buttonPresser implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Cell previousCell = sara.prepareSara(cell);
 		if (previousCell != null) {
-			redrawButton(previousCell);
+			update(previousCell);
 		}
 	}
 	
-	public void redrawButton(Cell cell) {
+	public void update(Cell cell) {
 		cell.getButton().setIcon(window.tileIcon);
 		sara.getLocation().getButton().setIcon(window.SaraIcon);
+		window.scoreBox.setText("Happiness: " + sara.getHappiness());
+		window.frame.requestFocusInWindow();
+	}
+	@Override
+	public void keyPressed(KeyEvent key) {
+		// do nothing here
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent key) {
+		// adding arrow key controls and wasd for the true gamers
+		int keyCode = key.getKeyCode();
+		
+		Cell saraCell = sara.getLocation();
+		Cell previousCell = null;
+		
+		switch (keyCode) {
+			case KeyEvent.VK_UP:
+				
+				if (saraCell.getY() == 0) {
+					// Sara is trying to move off the top of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell north of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() - 1]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+			case KeyEvent.VK_W:
+				
+				if (saraCell.getY() == 0) {
+					// Sara is trying to move off the top of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell north of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() - 1]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+			case KeyEvent.VK_DOWN:
+				
+				if (saraCell.getY() == window.map.mapSize) {
+					// Sara is trying to move off the bottom of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell south of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() + 1]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+			case KeyEvent.VK_S:
+				
+				if (saraCell.getY() == window.map.mapSize) {
+					// Sara is trying to move off the bottom of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell south of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() + 1]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+			case KeyEvent.VK_LEFT:
+				
+				if (saraCell.getX() == 0) {
+					// Sara is trying to move off the left of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell west of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() - 1][saraCell.getY()]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+			case KeyEvent.VK_A:
+				
+				if (saraCell.getX() == 0) {
+					// Sara is trying to move off the left of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell west of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() - 1][saraCell.getY()]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+			case KeyEvent.VK_RIGHT:
+				
+				if (saraCell.getX() == window.map.mapSize) {
+					// Sara is trying to move off the right of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell east of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() + 1][saraCell.getY()]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+			case KeyEvent.VK_D:
+				
+				if (saraCell.getX() == window.map.mapSize) {
+					// Sara is trying to move off the right of the map
+					System.out.println("Living on the edge!");
+				} else {
+					// Get the cell east of sara to move into
+					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() + 1][saraCell.getY()]);
+				}
+				if (previousCell != null) {
+					update(previousCell);
+				}
+				
+				break;
+		}
+		
+	}
+	@Override
+	public void keyTyped(KeyEvent key) {
+		// also do nothing here
+		
 	}
 	
 }
