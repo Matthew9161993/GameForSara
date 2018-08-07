@@ -27,10 +27,19 @@ public class Map {
 				}
 			}
 		}
-		initRandomMap();
+		initRandomMap(0, 0);
 	}
 	
-	private void initRandomMap() {
+	public void initMap(int mapNum, int direction) {
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				mapData[i][j] = new Cell(i, j, mapSize);
+			}
+		}
+		initRandomMap(mapNum, direction);
+	}
+	
+	private void initRandomMap(int mapNum, int direction) {
 		mapData[0][0].createPath();
 		frontierCells = new ArrayList<Cell>();
 		addFrontier(mapData[0][0]);
@@ -49,7 +58,7 @@ public class Map {
 			
 			addFrontier(workingCell);
 		}
-		createObstacles();
+		createObstacles(mapNum, direction);
 	}
 	
 	private void addFrontier(Cell cell) {
@@ -120,13 +129,57 @@ public class Map {
 		}
 	}
 	
-	private void createObstacles() {
+	private void createObstacles(int mapNum, int direction) {
+		
+		if (mapNum == 0) {
+			// TODO: Change this later. Add Sara to the map! Currently adding to top left, this is NOW changing!
+			sara.addToCell(mapData[0][0]);
+		} else {
+			// TODO: This is the new implementation for random maps after Sara walks off the edge.
+			// TODO: Change direction numbers to final variables
+			
+			Cell saraLocation = sara.getLocation();
+			if (direction == 1) {
+				// Moving from top of previous map to bottom of new map
+				if (!mapData[saraLocation.getX()][mapSize - 1].isOccupied()) {
+					sara.addToCell(mapData[saraLocation.getX()][mapSize - 1]);
+					sara.setLocation(mapData[saraLocation.getX()][mapSize - 1]);
+				} else {
+					sara.addToCell(mapData[saraLocation.getX() + 1][mapSize - 1]);
+					sara.setLocation(mapData[saraLocation.getX() + 1][mapSize - 1]);
+				}
+			} else if (direction == 2) {
+				// Moving from right of previous map to left of new map
+				if (!mapData[0][saraLocation.getY()].isOccupied()) {
+					sara.addToCell(mapData[0][saraLocation.getY()]);
+					sara.setLocation(mapData[0][saraLocation.getY()]);
+				} else {
+					sara.addToCell(mapData[0][saraLocation.getY() + 1]);
+					sara.setLocation(mapData[0][saraLocation.getY() + 1]);
+				}
+			} else if (direction == 3) {
+				// Moving from bottom of previous map to top of new map
+				if (!mapData[saraLocation.getX()][0].isOccupied()) {
+					sara.addToCell(mapData[saraLocation.getX()][0]);
+					sara.setLocation(mapData[saraLocation.getX()][0]);
+				} else {
+					sara.addToCell(mapData[saraLocation.getX() + 1][0]);
+					sara.setLocation(mapData[saraLocation.getX() + 1][0]);
+				}
+			} else {
+				// Moving from left of previous map to right of new map
+				if (!mapData[mapSize - 1][saraLocation.getY()].isOccupied()) {
+					sara.addToCell(mapData[mapSize - 1][saraLocation.getY()]);
+					sara.setLocation(mapData[mapSize - 1][saraLocation.getY()]);
+				} else {
+					sara.addToCell(mapData[mapSize - 1][saraLocation.getY() + 1]);
+					sara.setLocation(mapData[mapSize - 1][saraLocation.getY() + 1]);
+				}
+			}
+		}
+		
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
-				if (i == 0 && j ==0) {
-					// TODO: Change this later. Add Sara to the map! Currently adding to top left, this will change
-					sara.addToCell(mapData[0][0]);
-				}
 				if (!mapData[i][j].isOccupied()) {
 					if (mapData[i][j].isPath()) {
 						mapData[i][j].createObstacle(rand);

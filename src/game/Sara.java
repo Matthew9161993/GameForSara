@@ -19,11 +19,14 @@ public class Sara {
 	
 	public void addToHappiness(int i) {
 		happiness += i;
-		System.out.println("Happiness : " + happiness);
 	}
 	
 	public Cell getLocation() {
 		return saraCell;
+	}
+	
+	public void setLocation(Cell cell) {
+		saraCell = cell;
 	}
 	
 	public void addToCell(Cell cell) {

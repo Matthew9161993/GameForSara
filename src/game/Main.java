@@ -9,6 +9,6 @@ public class Main {
 		// First time making a window!
 		// TODO: Work more with Swing
 		Window firstWindow = new Window(theGrandWalk);
-		firstWindow.setupScene();
+		firstWindow.setupInitialScene();
 	}
 }
