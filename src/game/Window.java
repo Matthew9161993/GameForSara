@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -18,7 +20,7 @@ public class Window {
 	
 	public Map map;
 	
-	public int mapNum;
+	// Refactor to create an Icon array, clean up the mess
 	
 	public Icon tileIcon;
 	
@@ -32,11 +34,14 @@ public class Window {
 	
 	public Icon SaraIcon;
 	
+	public Icon finishIcon;
+	
 	private final int SARA = 8;
 	private final int HALLWAY = 9;
 	private final int PUPPY = 10;
 	private final int BABY = 11;
 	private final int SNAKE = 12;
+	private final int END = 13;
 	
 	public Window(Map map) {
 		frame = new JFrame("Sara Takes a Walk!");
@@ -46,11 +51,11 @@ public class Window {
 		babyIcon = new ImageIcon("babby.png");
 		snakeIcon = new ImageIcon("snake.png");
 		SaraIcon = new ImageIcon("Sara.png");
+		finishIcon = new ImageIcon("end.png");
 		sara = map.getSara();
 		scoreBox = new JLabel("Happiness: " + sara.getHappiness());
 //		controller = new buttonPresser(null, this);
 		this.map = map;
-		mapNum = 0;
 	}
 	
 	public JFrame getFrame() {
@@ -98,10 +103,27 @@ public class Window {
 						case SNAKE : drawTile(buttonMapCells[i][j], snakeIcon);
 						break;
 						case SARA : drawTile(buttonMapCells[i][j], SaraIcon);
+						break;
+						case END : drawTile(buttonMapCells[i][j], finishIcon);
+						break;
 					}
 				} else {
 					drawTile(buttonMapCells[i][j], wallIcon);
 				}
+			}
+		}
+	}
+	
+	public void writeEndDialogue() {
+		while (true) {
+			int endDialogue = JOptionPane.showConfirmDialog(this.frame, "You made it!\n"
+	                + "Sara's happiness is: " + sara.getHappiness()
+	                + "\nCongratulations!",
+	                "A winner is you!",
+	                JOptionPane.DEFAULT_OPTION);
+	
+			if (endDialogue == 0) {
+				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 			}
 		}
 	}
@@ -121,11 +143,17 @@ class buttonPresser implements ActionListener, KeyListener {
     }
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Cell previousCell = sara.prepareSara(cell);
-		if (previousCell != null) {
-			update(previousCell);
-		} else {
-			window.frame.requestFocusInWindow();
+		Cell previousCell;
+		try {
+			previousCell = sara.prepareSara(cell);
+			if (previousCell != null) {
+				update(previousCell);
+			} else {
+				window.frame.requestFocusInWindow();
+			}
+		} catch (EndException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 	
@@ -138,9 +166,9 @@ class buttonPresser implements ActionListener, KeyListener {
 	}
 	
 	public void updateAll(int direction) {
-		window.mapNum++;
+		window.map.mapNum++;
 		window.frame.getContentPane().removeAll();
-		window.map.initMap(window.mapNum, direction);
+		window.map.initMap(window.map.mapNum, direction);
 		window.drawButtonMap();
 		window.frame.add(window.scoreBox);
 		window.frame.repaint();
@@ -163,16 +191,19 @@ class buttonPresser implements ActionListener, KeyListener {
 		
 		switch (keyCode) {
 			case KeyEvent.VK_UP:
-				
-				if (saraCell.getY() == 0) {
-					// Sara is trying to move off the top of the map
-					updateAll(1);
-				} else {
-					// Get the cell north of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() - 1]);
-				}
-				if (previousCell != null) {
-					update(previousCell);
+				try {
+					if (saraCell.getY() == 0) {
+						// Sara is trying to move off the top of the map
+						updateAll(1);
+					} else {
+						// Get the cell north of sara to move into
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() - 1]);
+					}
+					if (previousCell != null) {
+						update(previousCell);
+					}
+				} catch (EndException e) {
+					window.writeEndDialogue();
 				}
 				
 				break;
@@ -183,7 +214,12 @@ class buttonPresser implements ActionListener, KeyListener {
 					updateAll(1);
 				} else {
 					// Get the cell north of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() - 1]);
+					try {
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() - 1]);
+					} catch (EndException e) {
+						window.writeEndDialogue();
+
+					}
 				}
 				if (previousCell != null) {
 					update(previousCell);
@@ -197,7 +233,11 @@ class buttonPresser implements ActionListener, KeyListener {
 					updateAll(3);
 				} else {
 					// Get the cell south of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() + 1]);
+					try {
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() + 1]);
+					} catch (EndException e) {
+						window.writeEndDialogue();
+					}
 				}
 				if (previousCell != null) {
 					update(previousCell);
@@ -211,7 +251,11 @@ class buttonPresser implements ActionListener, KeyListener {
 					updateAll(3);
 				} else {
 					// Get the cell south of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() + 1]);
+					try {
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX()][saraCell.getY() + 1]);
+					} catch (EndException e) {
+						window.writeEndDialogue();
+					}
 				}
 				if (previousCell != null) {
 					update(previousCell);
@@ -225,7 +269,11 @@ class buttonPresser implements ActionListener, KeyListener {
 					updateAll(4);
 				} else {
 					// Get the cell west of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() - 1][saraCell.getY()]);
+					try {
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() - 1][saraCell.getY()]);
+					} catch (EndException e) {
+						window.writeEndDialogue();
+					}
 				}
 				if (previousCell != null) {
 					update(previousCell);
@@ -239,7 +287,11 @@ class buttonPresser implements ActionListener, KeyListener {
 					updateAll(4);
 				} else {
 					// Get the cell west of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() - 1][saraCell.getY()]);
+					try {
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() - 1][saraCell.getY()]);
+					} catch (EndException e) {
+						window.writeEndDialogue();
+					}
 				}
 				if (previousCell != null) {
 					update(previousCell);
@@ -253,7 +305,11 @@ class buttonPresser implements ActionListener, KeyListener {
 					updateAll(2);
 				} else {
 					// Get the cell east of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() + 1][saraCell.getY()]);
+					try {
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() + 1][saraCell.getY()]);
+					} catch (EndException e) {
+						window.writeEndDialogue();
+					}
 				}
 				if (previousCell != null) {
 					update(previousCell);
@@ -267,7 +323,11 @@ class buttonPresser implements ActionListener, KeyListener {
 					updateAll(2);
 				} else {
 					// Get the cell east of sara to move into
-					previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() + 1][saraCell.getY()]);
+					try {
+						previousCell = sara.prepareSara(window.map.getMapData()[saraCell.getX() + 1][saraCell.getY()]);
+					} catch (EndException e) {
+						window.writeEndDialogue();
+					}
 				}
 				if (previousCell != null) {
 					update(previousCell);

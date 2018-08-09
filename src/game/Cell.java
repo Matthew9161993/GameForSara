@@ -33,6 +33,7 @@ public class Cell {
 	public final int PUPPY = 10;
 	public final int BABY = 11;
 	public final int SNAKE = 12;
+	public final int END = 13;
 	
 	public final int PUPPY_SCORE = 5;
 	public final int BABY_SCORE = 10;
@@ -145,19 +146,25 @@ public class Cell {
 		}
 	}
 	
+	public void createEnd() {
+		setOccupant(END);
+		isOccupied = true;
+	}
+	
 	// Scoring time
 	// puppies : 5 pts
 	// babies : 10 pts
 	// snakes : -25 pts
 	
-	public void calculateHappiness(Sara sara) {
+	public void calculateHappiness(Sara sara) throws EndException {
 		switch (getOccupant()) {
 			case (PUPPY) : sara.addToHappiness(PUPPY_SCORE);
 			break;
 			case (BABY) : sara.addToHappiness(BABY_SCORE);
 			break;
-			case (SNAKE) :sara.addToHappiness(SNAKE_SCORE);
+			case (SNAKE) : sara.addToHappiness(SNAKE_SCORE);
 			break;
+			case (END) : throw new EndException("Reached the end!");
 		}
 	}
 	

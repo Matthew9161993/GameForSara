@@ -5,6 +5,7 @@ import java.util.*;
 public class Map {
 	
 	public int mapSize;
+	public int mapNum;
 	private Cell[][] mapData;
 	private List<Cell> frontierCells;
 	private List<Cell> availableCells;
@@ -15,6 +16,7 @@ public class Map {
 		rand = new Random();
 		mapData = new Cell[size][size];
 		mapSize = size;
+		mapNum = 0;
 		initMap();
 	}
 	
@@ -131,6 +133,12 @@ public class Map {
 	
 	private void createObstacles(int mapNum, int direction) {
 		
+		// Make an end for MVP
+		if (mapNum > 5) {
+			mapData[(mapSize - 1) / 2][(mapSize - 1) / 2].createEnd();
+		}
+		
+		// TODO: MOVE THIS CODE
 		if (mapNum == 0) {
 			// TODO: Change this later. Add Sara to the map! Currently adding to top left, this is NOW changing!
 			sara.addToCell(mapData[0][0]);
@@ -177,6 +185,8 @@ public class Map {
 				}
 			}
 		}
+		
+		// TODO: MOVE THIS CODE
 		
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {

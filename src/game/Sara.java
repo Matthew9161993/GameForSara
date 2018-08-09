@@ -33,7 +33,7 @@ public class Sara {
 		cell.setOccupant(cell.SARA);
 	}
 	
-	public Cell prepareSara(Cell cell) {
+	public Cell prepareSara(Cell cell) throws EndException{
 		
 		Cell previousCell = null;
 		
@@ -53,7 +53,7 @@ public class Sara {
 		return previousCell;
 	}
 	
-	public Cell goNorth(Cell cell) {
+	public Cell goNorth(Cell cell) throws EndException {
 		
 		Cell previousCell = null;
 		
@@ -70,12 +70,15 @@ public class Sara {
 		return previousCell;
 	}
 	
-	public Cell goEast(Cell cell) {
+	public Cell goEast(Cell cell) throws EndException {
 		
 		Cell previousCell = null;
 		
 		if (look(cell)) {
 			previousCell = saraCell;
+//			if (cell.getOccupant() == cell.END) {
+//				System.out.println("END");
+//			}
 			cell.calculateHappiness(this);
 			cell.setOccupant(HALLWAY);
 			saraCell = cell;
@@ -87,12 +90,15 @@ public class Sara {
 		return previousCell;
 	}
 	
-	public Cell goSouth(Cell cell) {
+	public Cell goSouth(Cell cell) throws EndException {
 		
 		Cell previousCell = null;
 		
 		if (look(cell)) {
 			previousCell = saraCell;
+			if (cell.getOccupant() == cell.END) {
+				System.out.println("END");
+			}
 			cell.calculateHappiness(this);
 			cell.setOccupant(HALLWAY);
 			saraCell = cell;
@@ -104,12 +110,15 @@ public class Sara {
 		return previousCell;
 	}
 	
-	public Cell goWest(Cell cell) {
+	public Cell goWest(Cell cell) throws EndException {
 		
 		Cell previousCell = null;
 		
 		if (look(cell)) {
 			previousCell = saraCell;
+			if (cell.getOccupant() == cell.END) {
+				System.out.println("END");
+			}
 			cell.calculateHappiness(this);
 			cell.setOccupant(HALLWAY);
 			saraCell = cell;
