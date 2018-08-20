@@ -4,11 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class Window {
 	
@@ -45,13 +43,13 @@ public class Window {
 	
 	public Window(Map map) {
 		frame = new JFrame("Sara Takes a Walk!");
-		tileIcon = new ImageIcon("tile.png");
-		wallIcon = new ImageIcon("wall.png");
-		puppyIcon = new ImageIcon("puppy.png");
-		babyIcon = new ImageIcon("babby.png");
-		snakeIcon = new ImageIcon("snake.png");
-		SaraIcon = new ImageIcon("Sara.png");
-		finishIcon = new ImageIcon("end.png");
+		tileIcon = new ImageIcon(getClass().getResource(("tile.png")));
+		wallIcon = new ImageIcon(getClass().getResource(("wall.png")));
+		puppyIcon = new ImageIcon(getClass().getResource(("puppy.png")));
+		babyIcon = new ImageIcon(getClass().getResource(("babby.png")));
+		snakeIcon = new ImageIcon(getClass().getResource(("snake.png")));
+		SaraIcon = new ImageIcon(getClass().getResource(("Sara.png")));
+		finishIcon = new ImageIcon(getClass().getResource(("end.png")));
 		sara = map.getSara();
 		scoreBox = new JLabel("Happiness: " + sara.getHappiness());
 //		controller = new buttonPresser(null, this);
